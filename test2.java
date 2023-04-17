@@ -157,7 +157,6 @@ public class test2 implements ActionListener {
             result = num1 / num2;
             break;
         default:
-            System.out.println("Invalid operator.");
             break;
 		}
 		num1 = result;
