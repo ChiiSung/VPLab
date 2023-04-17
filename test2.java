@@ -50,10 +50,15 @@ public class test2 implements ActionListener {
             	public void actionPerformed(ActionEvent e) {
             		
             		if(e.getActionCommand() == "."){
-            			textField.setText(textField.getText() + ".");
+            			if(!textField.getText().contains(".")) {
+            				textField.setText(textField.getText() + ".");
+            			}
             			return;
             		}else if(e.getActionCommand() == "Delete") {
-            			textField.setText("");
+            			StringBuffer sb = new StringBuffer(textField.getText());
+            			sb.deleteCharAt(sb.length()-1);  
+            			String a = new String(sb);
+            			textField.setText(a);
             			return;
             		}
             		
