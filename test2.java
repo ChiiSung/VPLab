@@ -19,6 +19,7 @@ public class test2 implements ActionListener {
         frame = new JFrame("Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(420, 550);
+        frame.setBounds(500,250,420,550);
         frame.setLayout(null);
 
         textField = new JTextField();
@@ -59,6 +60,7 @@ public class test2 implements ActionListener {
             			sb.deleteCharAt(sb.length()-1);  
             			String a = new String(sb);
             			textField.setText(a);
+            			result = Double.valueOf(textField.getText());
             			return;
             		}
             		
