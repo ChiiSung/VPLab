@@ -109,7 +109,7 @@ public class lab6 implements FocusListener{
 	}
 	
 	public void buildTable(String keyword,JPanel panel) {
-		String[][] tableData = new String[250][6];
+		String[][] tableData = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employeesdb","root","");
@@ -117,6 +117,13 @@ public class lab6 implements FocusListener{
 			String sql = "Select * From employees Where emp_no Like \"%" + (keyword.contentEquals("Search emp_no")? "":keyword)+"%\" ;";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
+			
+			int j = 0;
+			while(rs.next()) {
+				j++;
+			}
+			tableData = new String[j][6];
+			rs = stmt.executeQuery(sql);
 			
 			int i = 0;
 			while(rs.next()) {
@@ -369,13 +376,13 @@ public class lab6 implements FocusListener{
 				}
 				main.setVisible(true);
 				editpl.setVisible(false);
+				refreshTable(tablePl, main);
 			}
 		});
 		save.setBounds(203, 363, 85, 21);
 		editpl.add(save);
 		frame.add(editpl);
 		
-		refreshTable(tablePl, main);
 	}
 	
 	public void refreshTable(JPanel tablePl, JPanel main) {
