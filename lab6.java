@@ -147,7 +147,15 @@ public class lab6 implements FocusListener{
         listSelectionModel = display.getSelectionModel();
         listSelectionModel.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-				numberOfRow = e.getLastIndex();
+				ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+				int minIndex = lsm.getMinSelectionIndex();
+                int maxIndex = lsm.getMaxSelectionIndex();
+                for (int i = minIndex; i <= maxIndex; i++) {
+                    if (lsm.isSelectedIndex(i)) {
+        				numberOfRow = i;
+                    }
+                }
+
 				try {
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employeesdb","root","");
