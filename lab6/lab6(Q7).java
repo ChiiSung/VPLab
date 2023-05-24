@@ -283,7 +283,7 @@ public class lab6_part2 implements FocusListener{
 					Statement stmt = con.createStatement();
 					ResultSet rs = stmt.executeQuery(test);
 					rs.next();
-					if(String.valueOf(rs.getInt(1)) == emp_no.getText()) {
+					if(rs.getRow() != 1) {
 						String sql = "INSERT INTO employees(emp_no, birth_date, first_name, last_name, gender, hire_date) values(?,?,?,?,?,?)";
 						PreparedStatement pstmt = con.prepareStatement(sql);
 						pstmt.setString(1,emp_no.getText());

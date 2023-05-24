@@ -280,7 +280,7 @@ public class lab6 implements FocusListener{
 					Statement stmt1 = con.createStatement();
 					ResultSet rs = stmt1.executeQuery(test);
 					rs.next();
-					if(String.valueOf(rs.getInt(1)) == emp_no.getText()) {
+					if(rs.getRow() != 1) {
 						String sql = "INSERT INTO employees(emp_no, birth_date, first_name, last_name, gender, hire_date) values('"
 								+emp_no.getText()+"','"+birth_date.getText()+"','"+first_name.getText()+"','"+last_name.getText()+"','"+gender.getText()+"','"+hire_date.getText()+"')" ;
 						Statement stmt = con.createStatement();
