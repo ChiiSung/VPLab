@@ -276,11 +276,16 @@ public class lab6 implements FocusListener{
 					Class.forName("com.mysql.cj.jdbc.Driver");
 					Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employeesdb","root","");
 					
-					String sql = "INSERT INTO employees(emp_no, birth_date, first_name, last_name, gender, hire_date) values('"
-							+emp_no.getText()+"','"+birth_date.getText()+"','"+first_name.getText()+"','"+last_name.getText()+"','"+gender.getText()+"','"+hire_date.getText()+"')" ;
-					Statement stmt = con.createStatement();
-					stmt.executeUpdate(sql);
-					
+					String test = "Select * From employees Where emp_no ="+ emp_no.getText() +";";
+					Statement stmt1 = con.createStatement();
+					ResultSet rs = stmt1.executeQuery(test);
+					rs.next();
+					if(String.valueOf(rs.getInt(1)) == emp_no.getText()) {
+						String sql = "INSERT INTO employees(emp_no, birth_date, first_name, last_name, gender, hire_date) values('"
+								+emp_no.getText()+"','"+birth_date.getText()+"','"+first_name.getText()+"','"+last_name.getText()+"','"+gender.getText()+"','"+hire_date.getText()+"')" ;
+						Statement stmt = con.createStatement();
+						stmt.executeUpdate(sql);
+					}
 					con.close();
 				}catch(SQLException e1) {
 					e1.printStackTrace();
@@ -404,6 +409,5 @@ public class lab6 implements FocusListener{
 	
 	public static void main(String arg[]) {
 		new lab6();
-
 	}
 }
