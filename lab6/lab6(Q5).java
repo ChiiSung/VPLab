@@ -285,6 +285,8 @@ public class lab6 implements FocusListener{
 								+emp_no.getText()+"','"+birth_date.getText()+"','"+first_name.getText()+"','"+last_name.getText()+"','"+gender.getText()+"','"+hire_date.getText()+"')" ;
 						Statement stmt = con.createStatement();
 						stmt.executeUpdate(sql);
+					}else{
+						JOptionPane.showMessageDialog(null, "The emp_no was already exist", "Error", JOptionPane.WARNING_MESSAGE);
 					}
 					con.close();
 				}catch(SQLException e1) {
