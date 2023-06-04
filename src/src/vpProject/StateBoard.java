@@ -2,6 +2,12 @@ package vpProject;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.*;
 
 public class StateBoard extends JPanel implements ActionListener{
@@ -11,10 +17,12 @@ public class StateBoard extends JPanel implements ActionListener{
 	ImageIcon boardIcon = IconClass.createIcon("icon/boardinfo.png",25,25);
 	ImageIcon playerIcon = IconClass.createIcon("icon/human.png",25,25);
 	ImageIcon botPlayerIcon = IconClass.createIcon("icon/ai.png",25,25);
-	int timer = 0, board = 0, player = 0, botPlayer = 0;
+	static int match = 0, player = 0, botPlayer = 0;
+	int timer = 0, board = 0;
 	Timer t;
 	
 	StateBoard(){
+		readDB();
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		turnLb = new JLabel();
@@ -28,7 +36,6 @@ public class StateBoard extends JPanel implements ActionListener{
 		
 		boardPl = new JPanel();
 		boardPl.setLayout(flowLayout);
-//		boardPl.setBorder(BorderFactory.createLineBorder(Color.black));
 		boardPl.setAlignmentX(Component.CENTER_ALIGNMENT);
 		setBoard();
 		
@@ -131,6 +138,66 @@ public class StateBoard extends JPanel implements ActionListener{
 		timerLb.setText(String.valueOf(timer));
 	}
 	
+	public void stopTimer() {
+		t.stop();
+	}
+
+	public void readDB() {
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/tictactoe","root","");
+		
+				String sql = "SELECT * FROM player_match "
+						+ "WHERE player_id =" + TicTacToe.playerId + " AND board_id = " + TicTacToe.board + ";";
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(sql);
+				System.out.println("yes" + TicTacToe.board);
+				if(!rs.next()) {
+					match = 0;
+					player = 0;
+					botPlayer = 0;
+				}else {
+					match = rs.getInt(1);
+					player = rs.getInt(4);
+					botPlayer = rs.getInt(5);
+				}
+				
+				rs.close();
+				stmt.close();
+				con.close();
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
+		
+	}
 	
-	
+	public void updateDB() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/tictactoe","root","");
+			String sql = null;
+			if(match == 0) {
+			sql = "INSERT INTO player_match VALUES("
+					+  match
+					+ "," + TicTacToe.board 
+					+ "," + TicTacToe.playerId
+					+ "," + player
+					+ "," + botPlayer + ");";
+			}else {
+				sql = "UPDATE player_match SET "
+						+ "board_id = "+ TicTacToe.board 
+						+ ", player_id = "+ TicTacToe.playerId
+						+ ", match_win_count = "+ player
+						+ ", match_lose_count = " + botPlayer 
+						+ " WHERE match_id = "+ match+ ";";
+			}
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(sql);
+			
+			stmt.close();
+			con.close();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

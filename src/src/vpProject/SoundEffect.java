@@ -61,6 +61,8 @@ public class SoundEffect {
 	    if(soundLoaded) {
 	    	clip.start();
 		}
+	    
+	    clip.close();
     }
 	
 

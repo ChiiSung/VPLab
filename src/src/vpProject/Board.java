@@ -7,8 +7,8 @@ import javax.swing.*;
 public class Board extends JPanel{
 	int numberOfBoard = TicTacToe.board + 3;
 	JButton board[][];
-	ImageIcon XIcon;
-	ImageIcon OIcon;
+	ImageIcon XIcon, OIcon;
+	ImageIcon winnerIcon;
 	Boolean player1 = true, win = false;
 	int lenght, boardnumber = numberOfBoard*numberOfBoard;
 	
@@ -36,8 +36,13 @@ public class Board extends JPanel{
 						int j = Integer.valueOf(p[1]);
 						if(TicTacToe.gamemode == 0) {
 							player1(i,j);
-							if(win || boardnumber < 2){
-								GamePlayPage.playAgainBt.setVisible(true);
+							boardnumber--;
+							GamePlayPage.stateBoard.addBoard();
+							if(win){
+								won();
+								return;
+							}else if(boardnumber < 1 ) { //check draw for the numberOfBoard%2 != 0 board. 
+								draw();
 								return;
 							}
 							if(TicTacToe.difficulty == 0) {
@@ -45,21 +50,56 @@ public class Board extends JPanel{
 							}else {
 								hardAi();
 							}
+						boardnumber--;
+						GamePlayPage.stateBoard.addBoard();
+						if(boardnumber < 1 ) { //check draw for the numberOfBoard%2 == 0 board. 
+							draw();
+							return;
+						}
 						}else {
 							if(player1) {
 								player1(i,j);
 								player1 = false;
+								GamePlayPage.stateBoard.addBoard();
+								GamePlayPage.stateBoard.turnPanel(2);
 							}else {
 								player2(i,j);
 								player1 = true;
+								GamePlayPage.stateBoard.addBoard();
+								GamePlayPage.stateBoard.turnPanel(1);
 							}
+							if(win){
+								won();
+								return;
+							}else if(boardnumber < 2) { 
+								draw();
+							}
+							boardnumber--;
 						}
-						boardnumber -= 2;
 					}
 				});
 				add(board[i][j]);
 			}
 		}
+	}
+	
+	public void won() {
+		GamePlayPage.stateBoard.turnPanel(((winnerIcon==XIcon)? 3:5));
+		GamePlayPage.stateBoard.stopTimer();
+		if(winnerIcon == XIcon) {
+			GamePlayPage.stateBoard.numPlWin();
+			GamePlayPage.playAgainBt.setVisible(true);
+		}else {
+			GamePlayPage.stateBoard.numAiWin();
+			GamePlayPage.tryAgainBt.setVisible(true);
+		}
+		GamePlayPage.stateBoard.updateDB();
+	}
+	
+	public void draw() {
+		GamePlayPage.tryAgainBt.setVisible(true);
+		GamePlayPage.stateBoard.turnPanel(4);
+		GamePlayPage.stateBoard.stopTimer();
 	}
 	
 	public void player1(int i, int j) {
@@ -84,7 +124,7 @@ public class Board extends JPanel{
 		board[x][y].setEnabled(false);
 		calWin(OIcon, Color.CYAN);
 		if(win) {
-			GamePlayPage.tryAgainBt.setVisible(true);
+			won();
 		}
 	}
 	
@@ -274,6 +314,7 @@ public class Board extends JPanel{
 	    ety = false;
 	    ety2 = false;
 		
+	    if(numberOfBoard >3) {
 	    //Check horizon and vertical (computer second)
 	    for(int i=0; i < numberOfBoard; i++) {
 	    	countBotH = 0;
@@ -356,32 +397,6 @@ public class Board extends JPanel{
 				board[etyR][etyC].setEnabled(false);
 				botmove = true;
 	    	}
-	    }
-	    countBotH = 0;
-	    countBotV = 0;
-	    ety = false;
-	    ety2 = false;
-	    
-	  //If not board is choose by computer, it will random select the middle board
-	    if(!botmove) {
-	    	boolean middleEty = false;
-	    	for(int i = 1; i < numberOfBoard -1; i++) {
-				for(int j = 1; j < numberOfBoard -1; j++) {
-					if(board[i][j].getIcon() == null) {
-						middleEty = true;
-					}
-				}
-	    	}
-	    	if(middleEty) {
-	    		do {
-	    			etyR = (int)(Math.random()*(numberOfBoard-2)+1);
-	    			etyC = (int)(Math.random()*(numberOfBoard-2)+1);
-	    		}while(board[etyR][etyC].getIcon() != null);
-	    		board[etyR][etyC].setIcon(OIcon);
-	    		board[etyR][etyC].setEnabled(false);
-	    		botmove = true;
-	    	}
-	    	
 	    }
 	    countBotH = 0;
 	    countBotV = 0;
@@ -471,6 +486,36 @@ public class Board extends JPanel{
 				botmove = true;
 	    	}
 	    }
+	    countBotH = 0;
+	    countBotV = 0;
+	    ety = false;
+	    ety2 = false;
+	    }
+	    //If not board is choose by computer, it will random select the middle board
+	    if(!botmove) {
+	    	boolean middleEty = false;
+	    	for(int i = 1; i < numberOfBoard -1; i++) {
+				for(int j = 1; j < numberOfBoard -1; j++) {
+					if(board[i][j].getIcon() == null) {
+						middleEty = true;
+					}
+				}
+	    	}
+	    	if(middleEty) {
+	    		do {
+	    			etyR = (int)(Math.random()*(numberOfBoard-2)+1);
+	    			etyC = (int)(Math.random()*(numberOfBoard-2)+1);
+	    		}while(board[etyR][etyC].getIcon() != null);
+	    		board[etyR][etyC].setIcon(OIcon);
+	    		board[etyR][etyC].setEnabled(false);
+	    		botmove = true;
+	    	}
+	    	
+	    }
+	    countBotH = 0;
+	    countBotV = 0;
+	    ety = false;
+	    ety2 = false;
 	    
 	    //select the outer round when does not have any choose
 	    if(!botmove) {
@@ -486,7 +531,7 @@ public class Board extends JPanel{
 	    
 	    calWin(OIcon, Color.CYAN);
 	    if(win) {
-			GamePlayPage.tryAgainBt.setVisible(true);
+			won();
 		}
 	}
 	
@@ -521,35 +566,41 @@ public class Board extends JPanel{
 			}
 		}
 		
-		//check the \ line
-		for(int i = 0; i < numberOfBoard; i++) {
-			if(board[i][i].getIcon() == Icon) {
-				xCount++;
-			}
-		}
-		if(xCount == numberOfBoard) {
-			win = true;
+		if(!win) {
+			//check the \ line
 			for(int i = 0; i < numberOfBoard; i++) {
-				board[i][i].setBackground(color);
+				if(board[i][i].getIcon() == Icon) {
+					xCount++;
+				}
 			}
-		}else {
-			xCount = 0;
+			if(xCount == numberOfBoard) {
+				win = true;
+				for(int i = 0; i < numberOfBoard; i++) {
+					board[i][i].setBackground(color);
+				}
+			}else {
+				xCount = 0;
+			}
 		}
 		
-		//Check for / line
-		for(int i = 0, j = numberOfBoard - 1; i < numberOfBoard; i++,j--) {
-			if(board[i][j].getIcon() == Icon) {
-				xCount++;
-			}
-		}
-		if(xCount == numberOfBoard) {
-			win = true;
+		if(!win) {
+			//Check for / line
 			for(int i = 0, j = numberOfBoard - 1; i < numberOfBoard; i++,j--) {
-				board[i][j].setBackground(color);
+				if(board[i][j].getIcon() == Icon) {
+					xCount++;
+				}
+			}
+			if(xCount == numberOfBoard) {
+				win = true;
+				for(int i = 0, j = numberOfBoard - 1; i < numberOfBoard; i++,j--) {
+					board[i][j].setBackground(color);
+				}
 			}
 		}
-		if(win)
+		if(win) {
+			winnerIcon = Icon;
 			whenWin();
+		}
 		return win;
 	}
 	

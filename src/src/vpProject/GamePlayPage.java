@@ -5,8 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class GamePlayPage extends JPanel{
-	StateBoard stateBoard;
-	Board board;
+	static StateBoard stateBoard;
+	static Board board;
 	JPanel footer;
 	static JButton playAgainBt, tryAgainBt;
 	JButton exitBt;
@@ -18,13 +18,16 @@ public class GamePlayPage extends JPanel{
 		playAgainBt = new JButton("Play Again");
 		playAgainBt.setIcon(null);
 		playAgainBt.setVisible(false);
+		playAgainBt.setPreferredSize(new Dimension(100,40));
 		playAgainBt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SoundEffect.buttonSound();
+				setVisible(false);
 				removeAll();
-				repaint();
-				revalidate();
-				initialize();
+				TicTacToe.frame.setSize(330,394);
+				TicTacToe.main.setVisible(true);
+				TicTacToe.frame.repaint();
+				TicTacToe.buildGamePlay();
 			}		
 		});
 		footer.add(playAgainBt);
@@ -32,12 +35,16 @@ public class GamePlayPage extends JPanel{
 		tryAgainBt = new JButton("Try Again");
 		tryAgainBt.setIcon(null);
 		tryAgainBt.setVisible(false);
+		tryAgainBt.setPreferredSize(new Dimension(100,40));
 		tryAgainBt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SoundEffect.buttonSound();
+				setVisible(false);
 				removeAll();
-				repaint();
-				initialize();
+				TicTacToe.frame.setSize(330,394);
+				TicTacToe.main.setVisible(true);
+				TicTacToe.frame.repaint();
+				TicTacToe.buildGamePlay();
 			}		
 		});
 		footer.add(tryAgainBt);

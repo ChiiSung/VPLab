@@ -65,11 +65,7 @@ public class TicTacToe{
 		play.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				SoundEffect.buttonSound();
-				gamePlayPage = new GamePlayPage();
-				frame.setSize(450,550);
-				main.setVisible(false);
-				frame.add(gamePlayPage);
-				gamePlayPage.setVisible(true);
+				buildGamePlay();
 			}
 		});
 		//Setting button
@@ -111,7 +107,16 @@ public class TicTacToe{
 		}
 		
 		rs.close();
+		stmt.close();
 		con.close();
+	}
+	
+	static public void buildGamePlay() {
+		gamePlayPage = new GamePlayPage();
+		frame.setSize(450,550);
+		main.setVisible(false);
+		frame.add(gamePlayPage);
+		gamePlayPage.setVisible(true);
 	}
 
 	public static void main(String[] args) {

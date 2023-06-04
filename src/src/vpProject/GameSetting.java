@@ -11,7 +11,7 @@ import swing.*;
 
 public class GameSetting extends JPanel{
 	JPanel generalPl, matchInfoPl, gamemodePl, boardPl, difficultyPl, matchTimerPl, boardInfoPl, playerCounterPl, backgroundMusicPl;
-	JLabel settingLb, generalLb, matchInfoLb, gamemodeLb, boardLb, difficultyLb, matchTimerLb, boardInfoLb, playerCounterLb, backgroundLb;
+	JLabel settingLb, generalLb, matchInfoLb, gamemodeLb, boardLb, difficultyLb, matchTimerLb, boardInfoLb, playerCounterLb, backgroundLb, matchTimerDesc, boardInfoDesc, playerCounterDesc;
 	JComboBox gamemodeCb, boardCb, difficultyCb;
 	JScrollPane settingSp;
 	SwitchButton matchTimerSb, boardInfoSb, playerCounterSb, backgroundMusicSb;
@@ -154,6 +154,11 @@ public class GameSetting extends JPanel{
 		matchTimerLb.setBounds(10, 10, 163, 46);
 		matchTimerPl.add(matchTimerLb);
 		
+		matchTimerDesc = new JLabel("Keep Track of how long the match takes");
+		matchTimerDesc.setFont(new Font("Times New Romen", Font.PLAIN, 11));
+		matchTimerDesc.setBounds(40, 27, 200, 46);
+		matchTimerPl.add(matchTimerDesc);
+		
 		matchTimerSb = new SwitchButton();
 		matchTimerSb.setBounds(310, 21, 50, 21);
 		matchTimerSb.setSelected(TicTacToe.matchTimer);
@@ -171,6 +176,11 @@ public class GameSetting extends JPanel{
 		boardInfoLb.setBounds(10, 10, 163, 46);
 		boardInfoPl.add(boardInfoLb);
 		
+		boardInfoDesc = new JLabel("Displays number of spots taken");
+		boardInfoDesc.setFont(new Font("Times New Romen", Font.PLAIN, 11));
+		boardInfoDesc.setBounds(40, 27, 200, 46);
+		boardInfoPl.add(boardInfoDesc);
+		
 		boardInfoSb = new SwitchButton();
 		boardInfoSb.setBounds(310, 23, 50, 21);
 		boardInfoSb.setSelected(TicTacToe.boardInfo);
@@ -187,6 +197,12 @@ public class GameSetting extends JPanel{
 		playerCounterLb.setIcon(playerIcon);
 		playerCounterLb.setBounds(10, 10, 163, 46);
 		playerCounterPl.add(playerCounterLb);
+		
+		playerCounterDesc = new JLabel("Amount of people and bots playing");
+		playerCounterDesc.setFont(new Font("Times New Romen", Font.PLAIN, 11));
+		playerCounterDesc.setBounds(40, 27, 200, 46);
+		playerCounterPl.add(playerCounterDesc);
+		
 		
 		playerCounterSb = new SwitchButton();
 		playerCounterSb.setBounds(310, 21, 50, 21);
@@ -267,7 +283,8 @@ public class GameSetting extends JPanel{
 		Statement stmt = con.createStatement();
 		stmt.executeUpdate(sql);
 		
-		con.close();
+		stmt.close();
+		con.close();;
 	}
 	
 }
